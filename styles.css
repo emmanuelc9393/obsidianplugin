@@ -438,15 +438,13 @@
 .theme-dark .tag-item:hover:not(.tag-disabled) {
     background-color: hsla(var(--tag-hue), 80%, 70%, 0.15);
     border-color: hsla(var(--tag-hue), 80%, 70%, 0.45);
-    transform: scale(1.05) translateY(-1px);
-    box-shadow: 0 3px 8px hsla(var(--tag-hue), 80%, 70%, 0.12);
+    box-shadow: inset 0 0 0 1px hsla(var(--tag-hue), 80%, 70%, 0.3);
 }
 
 .theme-light .tag-item:hover:not(.tag-disabled) {
     background-color: hsla(var(--tag-hue), 85%, 35%, 0.12);
     border-color: hsla(var(--tag-hue), 85%, 35%, 0.4);
-    transform: scale(1.05) translateY(-1px);
-    box-shadow: 0 3px 8px hsla(var(--tag-hue), 85%, 35%, 0.08);
+    box-shadow: inset 0 0 0 1px hsla(var(--tag-hue), 85%, 35%, 0.2);
 }
 
 .tag-item-name {
