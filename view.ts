@@ -19,7 +19,7 @@ export class TagIntersectionView extends ItemView {
     private searchQuery: string = "";
     private hideEmptyTags: boolean = false;
     private sortOrder: string = "mtime-desc"; // 'mtime-desc', 'mtime-asc', 'title-asc', 'title-desc'
-    private tagSortOrder: string = "relation-desc"; // 'alpha-asc', 'alpha-desc', 'relation-desc', 'relation-asc'
+    private tagSortOrder: string = "alpha-asc"; // 'alpha-asc', 'alpha-desc', 'relation-desc', 'relation-asc'
 
     // DOM Elements
     private searchInputEl: HTMLInputElement;
@@ -175,10 +175,10 @@ export class TagIntersectionView extends ItemView {
 
         // Tag Sort Selector
         this.tagSortSelectEl = tagsHeaderWrapper.createEl("select", { cls: "tag-sort-select" });
-        this.tagSortSelectEl.createEl("option", { value: "relation-desc", text: "Relação (↓)" });
-        this.tagSortSelectEl.createEl("option", { value: "relation-asc", text: "Relação (↑)" });
         this.tagSortSelectEl.createEl("option", { value: "alpha-asc", text: "A → Z" });
         this.tagSortSelectEl.createEl("option", { value: "alpha-desc", text: "Z → A" });
+        this.tagSortSelectEl.createEl("option", { value: "relation-desc", text: "Relação (↓)" });
+        this.tagSortSelectEl.createEl("option", { value: "relation-asc", text: "Relação (↑)" });
 
         this.tagSortSelectEl.addEventListener("change", (e) => {
             this.tagSortOrder = (e.target as HTMLSelectElement).value;
@@ -245,7 +245,9 @@ export class TagIntersectionView extends ItemView {
         }
 
         // 4. Render Tag List
-        this.renderTagList(allUniqueTags, tagCounts, matchingFiles.length);
+        // Use total vault files as denominator when no filter is active
+        const denominator = this.selectedTags.size > 0 ? matchingFiles.length : this.fileIndex.length;
+        this.renderTagList(allUniqueTags, tagCounts, denominator);
 
         // 5. Render Notes List
         this.renderNotesList(matchingFiles);
@@ -331,15 +333,11 @@ export class TagIntersectionView extends ItemView {
             tagBtn.createSpan({ text: item.tag, cls: "tag-item-name" });
 
             const metaSpan = tagBtn.createSpan({ cls: "tag-item-meta" });
-            metaSpan.createSpan({ text: item.count.toString(), cls: "tag-item-count" });
-
-            if (this.selectedTags.size > 0 && totalMatchingFiles > 0) {
-                // Relationship bar + percentage
-                const relWrapper = metaSpan.createSpan({ cls: "tag-item-relation" });
-                const bar = relWrapper.createSpan({ cls: "tag-relation-bar" });
-                bar.createSpan({ cls: "tag-relation-fill", attr: { style: `width:${item.pct}%` } });
-                relWrapper.createSpan({ text: `${item.pct}%`, cls: "tag-relation-pct" });
-            }
+            // Relationship bar + percentage (always visible)
+            const relWrapper = metaSpan.createSpan({ cls: "tag-item-relation" });
+            const bar = relWrapper.createSpan({ cls: "tag-relation-bar" });
+            bar.createSpan({ cls: "tag-relation-fill", attr: { style: `width:${item.pct}%` } });
+            relWrapper.createSpan({ text: `${item.pct}%`, cls: "tag-relation-pct" });
 
             tagBtn.addEventListener("click", () => {
                 if (isDisabled) return;
