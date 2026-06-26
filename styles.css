@@ -401,14 +401,14 @@
     background-color: var(--background-secondary-alt);
     max-height: 220px;
     display: flex;
-    flex-wrap: wrap;
-    align-content: flex-start;
-    gap: 8px;
+    flex-direction: column;
+    gap: 4px;
 }
 
 .tag-item {
-    display: inline-flex;
+    display: flex;
     align-items: center;
+    width: 100%;
     padding: 6px 12px;
     border-radius: 20px;
     cursor: pointer;
@@ -419,6 +419,7 @@
     background: transparent;
     text-align: left;
     gap: 6px;
+    box-sizing: border-box;
 }
 
 /* Dynamic theme variables applied by JS */
@@ -449,7 +450,7 @@
 }
 
 .tag-item-name {
-    max-width: 140px;
+    flex: 1;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -604,4 +605,63 @@
 .tag-list-container::-webkit-scrollbar-thumb:hover,
 .notes-list-container::-webkit-scrollbar-thumb:hover {
     background-color: var(--text-faint);
+}
+
+/* Tag sort selector */
+.tag-sort-select {
+    background-color: var(--background-modifier-form-field);
+    color: var(--text-normal);
+    border: 1px solid var(--background-modifier-border);
+    border-radius: 15px;
+    padding: 3px 10px;
+    font-size: 0.8em;
+    outline: none;
+    cursor: pointer;
+    font-weight: 600;
+    transition: border-color 0.2s ease;
+}
+
+.tag-sort-select:focus {
+    border-color: var(--interactive-accent);
+}
+
+/* Tag meta (count + relation) */
+.tag-item-meta {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+}
+
+/* Relationship bar */
+.tag-item-relation {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.tag-relation-bar {
+    display: inline-block;
+    width: 48px;
+    height: 5px;
+    border-radius: 3px;
+    background-color: var(--background-modifier-border);
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.tag-relation-fill {
+    display: block;
+    height: 100%;
+    border-radius: 3px;
+    background: linear-gradient(90deg, var(--interactive-accent), #db2777);
+    transition: width 0.3s ease;
+}
+
+.tag-relation-pct {
+    font-size: 0.75em;
+    font-weight: 700;
+    color: var(--text-muted);
+    min-width: 30px;
+    text-align: right;
 }

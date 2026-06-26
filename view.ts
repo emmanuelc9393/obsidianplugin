@@ -19,6 +19,7 @@ export class TagIntersectionView extends ItemView {
     private searchQuery: string = "";
     private hideEmptyTags: boolean = false;
     private sortOrder: string = "mtime-desc"; // 'mtime-desc', 'mtime-asc', 'title-asc', 'title-desc'
+    private tagSortOrder: string = "relation-desc"; // 'alpha-asc', 'alpha-desc', 'relation-desc', 'relation-asc'
 
     // DOM Elements
     private searchInputEl: HTMLInputElement;
@@ -28,6 +29,7 @@ export class TagIntersectionView extends ItemView {
     private notesCountEl: HTMLElement;
     private hideEmptyToggleEl: HTMLInputElement;
     private sortSelectEl: HTMLSelectElement;
+    private tagSortSelectEl: HTMLSelectElement;
 
     constructor(leaf: WorkspaceLeaf, plugin: TagIntersectionPlugin) {
         super(leaf);
@@ -171,6 +173,18 @@ export class TagIntersectionView extends ItemView {
             this.updateUI();
         });
 
+        // Tag Sort Selector
+        this.tagSortSelectEl = tagsHeaderWrapper.createEl("select", { cls: "tag-sort-select" });
+        this.tagSortSelectEl.createEl("option", { value: "relation-desc", text: "Relação (↓)" });
+        this.tagSortSelectEl.createEl("option", { value: "relation-asc", text: "Relação (↑)" });
+        this.tagSortSelectEl.createEl("option", { value: "alpha-asc", text: "A → Z" });
+        this.tagSortSelectEl.createEl("option", { value: "alpha-desc", text: "Z → A" });
+
+        this.tagSortSelectEl.addEventListener("change", (e) => {
+            this.tagSortOrder = (e.target as HTMLSelectElement).value;
+            this.updateUI();
+        });
+
         this.tagListContainer = tagsSection.createDiv({ cls: "tag-list-container" });
 
         // Notes Section
@@ -231,7 +245,7 @@ export class TagIntersectionView extends ItemView {
         }
 
         // 4. Render Tag List
-        this.renderTagList(allUniqueTags, tagCounts);
+        this.renderTagList(allUniqueTags, tagCounts, matchingFiles.length);
 
         // 5. Render Notes List
         this.renderNotesList(matchingFiles);
@@ -265,59 +279,70 @@ export class TagIntersectionView extends ItemView {
     }
 
     /**
-     * Renders available tags with counts
+     * Renders available tags with counts and relationship percentages
      */
-    private renderTagList(allUniqueTags: Set<string>, tagCounts: Map<string, number>) {
+    private renderTagList(allUniqueTags: Set<string>, tagCounts: Map<string, number>, totalMatchingFiles: number) {
         this.tagListContainer.empty();
 
-        // Format tags as an array with current count
-        const tagsWithCounts = Array.from(allUniqueTags).map(tag => {
-            return {
-                tag: tag,
-                count: tagCounts.get(tag) || 0
-            };
+        const tagsWithData = Array.from(allUniqueTags).map(tag => {
+            const count = tagCounts.get(tag) || 0;
+            const pct = totalMatchingFiles > 0 ? Math.round((count / totalMatchingFiles) * 100) : 0;
+            return { tag, count, pct };
         });
 
-        // Filter tags by search query
-        let filteredTags = tagsWithCounts.filter(item => {
-            return item.tag.includes(this.searchQuery);
-        });
+        let filteredTags = tagsWithData.filter(item => item.tag.includes(this.searchQuery));
 
-        // If hide empty toggle is checked, remove tags with count === 0 (only if some filter is selected)
         if (this.hideEmptyTags && this.selectedTags.size > 0) {
             filteredTags = filteredTags.filter(item => item.count > 0);
         }
 
-        // Sort tags: tags with count > 0 first (descending), then alphabetically
-        filteredTags.sort((a, b) => {
-            if (a.count !== b.count) {
-                return b.count - a.count; // Higher counts first
-            }
-            return a.tag.localeCompare(b.tag);
-        });
+        switch (this.tagSortOrder) {
+            case "alpha-asc":
+                filteredTags.sort((a, b) => a.tag.localeCompare(b.tag));
+                break;
+            case "alpha-desc":
+                filteredTags.sort((a, b) => b.tag.localeCompare(a.tag));
+                break;
+            case "relation-asc":
+                filteredTags.sort((a, b) => a.pct !== b.pct ? a.pct - b.pct : a.tag.localeCompare(b.tag));
+                break;
+            case "relation-desc":
+            default:
+                filteredTags.sort((a, b) => a.pct !== b.pct ? b.pct - a.pct : a.tag.localeCompare(b.tag));
+                break;
+        }
 
         if (filteredTags.length === 0) {
-            this.tagListContainer.createDiv({ 
-                text: this.searchQuery ? "Nenhuma tag encontrada para a pesquisa" : "Nenhuma tag disponível", 
-                cls: "notes-empty" 
+            this.tagListContainer.createDiv({
+                text: this.searchQuery ? "Nenhuma tag encontrada para a pesquisa" : "Nenhuma tag disponível",
+                cls: "notes-empty"
             });
             return;
         }
 
         for (const item of filteredTags) {
             const tagBtn = this.tagListContainer.createEl("button", { cls: "tag-item" });
-            
-            // If the tag count is 0 (and we have active tags), grey it out/disable it
+
             const isDisabled = this.selectedTags.size > 0 && item.count === 0;
             if (isDisabled) {
                 tagBtn.addClass("tag-disabled");
             }
 
             tagBtn.createSpan({ text: item.tag, cls: "tag-item-name" });
-            tagBtn.createSpan({ text: item.count.toString(), cls: "tag-item-count" });
+
+            const metaSpan = tagBtn.createSpan({ cls: "tag-item-meta" });
+            metaSpan.createSpan({ text: item.count.toString(), cls: "tag-item-count" });
+
+            if (this.selectedTags.size > 0 && totalMatchingFiles > 0) {
+                // Relationship bar + percentage
+                const relWrapper = metaSpan.createSpan({ cls: "tag-item-relation" });
+                const bar = relWrapper.createSpan({ cls: "tag-relation-bar" });
+                bar.createSpan({ cls: "tag-relation-fill", attr: { style: `width:${item.pct}%` } });
+                relWrapper.createSpan({ text: `${item.pct}%`, cls: "tag-relation-pct" });
+            }
 
             tagBtn.addEventListener("click", () => {
-                if (isDisabled) return; // Do nothing if disabled
+                if (isDisabled) return;
                 this.selectedTags.add(item.tag);
                 this.updateUI();
             });
