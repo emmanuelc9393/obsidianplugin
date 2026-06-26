@@ -1,0 +1,607 @@
+/* Advanced, Responsive and Beautiful CSS styles for Obsidian Tag Intersection Explorer */
+
+.tag-intersection-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 18px;
+    box-sizing: border-box;
+    gap: 16px;
+    font-family: var(--font-interface);
+    overflow: hidden;
+    background-color: var(--background-primary);
+}
+
+.tag-intersection-header {
+    flex-shrink: 0;
+    border-bottom: 1px solid var(--background-modifier-border);
+    padding-bottom: 12px;
+}
+
+.tag-intersection-title {
+    font-size: 1.4em;
+    font-weight: 700;
+    margin: 0 0 6px 0;
+    background: linear-gradient(135deg, var(--interactive-accent) 0%, #db2777 50%, #ec4899 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.tag-intersection-subtitle {
+    font-size: 0.82em;
+    color: var(--text-muted);
+    margin: 0;
+    line-height: 1.4;
+}
+
+/* Content wrapper that supports responsive columns */
+.tag-intersection-content {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    flex-grow: 1;
+    overflow: hidden;
+}
+
+/* Left Pane (Filters) */
+.tag-intersection-left-pane {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    flex-shrink: 0;
+}
+
+/* Responsive side-by-side design for wide screens (such as note tabs) */
+@media (min-width: 650px) {
+    .tag-intersection-content {
+        flex-direction: row;
+    }
+    
+    .tag-intersection-left-pane {
+        flex: 1;
+        min-width: 300px;
+        max-width: 600px;
+        border-right: 1px solid var(--background-modifier-border);
+        padding-right: 18px;
+        overflow-y: auto;
+        /* Scrollbar styles for the left pane in wide mode */
+        scrollbar-width: thin;
+    }
+    
+    .tag-intersection-left-pane::-webkit-scrollbar {
+        width: 4px;
+    }
+    
+    .tag-intersection-left-pane::-webkit-scrollbar-thumb {
+        background-color: var(--background-modifier-border);
+        border-radius: 4px;
+    }
+    
+    .tag-intersection-notes-section {
+        flex: 1.6;
+    }
+    
+    .tag-list-container {
+        max-height: none !important; /* Let the tag cloud grow on full screen */
+    }
+}
+
+/* Search bar styling */
+.tag-intersection-search-wrapper {
+    position: relative;
+    width: 100%;
+    flex-shrink: 0;
+}
+
+    .tag-intersection-search-input {
+        width: 100%;
+        padding: 12px 14px 12px 38px;
+        border-radius: 24px;
+        border: 1px solid var(--background-modifier-border);
+        background-color: var(--background-modifier-form-field);
+        color: var(--text-normal);
+        font-size: 1.1em;
+        outline: none;
+        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        box-sizing: border-box;
+    }
+
+.tag-intersection-search-input:focus {
+    border-color: var(--interactive-accent);
+    box-shadow: 0 0 0 3px rgba(var(--interactive-accent-rgb), 0.15);
+    background-color: var(--background-primary);
+}
+
+.tag-intersection-search-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    pointer-events: none;
+    opacity: 0.7;
+    font-size: 1em;
+}
+
+/* Active tags chips */
+.tag-intersection-excluded-section {
+    margin-top: 12px;
+    border-top: 1px solid var(--background-modifier-border);
+    padding-top: 10px;
+}
+
+.tag-intersection-excluded-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.75em;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    font-weight: 700;
+    margin-bottom: 6px;
+}
+
+.tag-intersection-excluded-input {
+    width: 100%;
+    padding: 8px 10px;
+    border-radius: 12px;
+    border: 1px solid var(--background-modifier-border);
+    background-color: var(--background-modifier-form-field);
+    color: var(--text-normal);
+    font-size: 0.85em;
+    margin-bottom: 8px;
+}
+
+.tag-excluded-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.tag-excluded-chip {
+    display: inline-flex;
+    align-items: center;
+    background: linear-gradient(135deg, hsl(var(--tag-hue), 65%, 45%) 0%, hsl(var(--tag-hue), 75%, 35%) 100%);
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 14px;
+    gap: 6px;
+    font-size: 0.78em;
+    cursor: default;
+}
+
+.tag-excluded-chip-remove {
+    margin-left: 4px;
+    cursor: pointer;
+    opacity: 0.8;
+}
+
+.tag-intersection-copy-btn {
+    background: var(--interactive-accent);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    padding: 4px 10px;
+    font-size: 0.8em;
+    cursor: pointer;
+    margin-left: 8px;
+    transition: background 0.2s;
+}
+
+.tag-intersection-copy-btn:hover {
+    background: var(--interactive-accent-hover);
+}
+
+.tag-intersection-clear-btn {
+    background: none;
+    border: none;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.95em;
+    color: var(--text-accent);
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.tag-intersection-clear-btn:hover {
+    background-color: rgba(var(--interactive-accent-rgb), 0.1);
+    color: var(--interactive-accent);
+}
+
+.tag-intersection-active-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    min-height: 24px;
+}
+
+.tag-active-chip {
+    display: inline-flex;
+    align-items: center;
+    background: linear-gradient(135deg, hsl(var(--tag-hue), 75%, 50%) 0%, hsl(var(--tag-hue), 85%, 42%) 100%);
+    box-shadow: 0 3px 8px hsla(var(--tag-hue), 75%, 50%, 0.25);
+    color: #fff !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    font-size: 0.82em;
+    padding: 5px 10px;
+    border-radius: 16px;
+    gap: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    animation: tagPopIn 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.tag-active-chip:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 12px hsla(var(--tag-hue), 75%, 50%, 0.35);
+    filter: brightness(1.05);
+}
+
+.tag-active-chip-remove {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    width: 16px;
+    height: 16px;
+    font-size: 1.1em;
+    background-color: rgba(255, 255, 255, 0.15);
+    transition: all 0.2s ease;
+}
+
+.tag-active-chip-remove:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+    transform: rotate(90deg);
+}
+
+.tag-active-empty {
+    font-style: italic;
+    color: var(--text-faint);
+    font-size: 0.85em;
+    padding: 6px 0;
+}
+
+/* Suggested Tags Section */
+.tag-intersection-suggested-section {
+    display: none; /* Controlled by JS */
+    flex-shrink: 0;
+    border-bottom: 1px solid var(--background-modifier-border);
+    padding-bottom: 14px;
+    animation: tagPopIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+}
+
+.tag-intersection-suggested-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.tag-suggested-chip {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 12px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.8em;
+    font-weight: 600;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px dashed transparent;
+    background: transparent;
+    gap: 4px;
+}
+
+.theme-dark .tag-suggested-chip {
+    color: hsl(var(--tag-hue), 85%, 75%);
+    background-color: hsla(var(--tag-hue), 85%, 75%, 0.04);
+    border-color: hsla(var(--tag-hue), 85%, 75%, 0.25);
+}
+
+.theme-light .tag-suggested-chip {
+    color: hsl(var(--tag-hue), 85%, 35%);
+    background-color: hsla(var(--tag-hue), 85%, 35%, 0.03);
+    border-color: hsla(var(--tag-hue), 85%, 35%, 0.20);
+}
+
+.tag-suggested-chip:hover {
+    transform: scale(1.05) translateY(-1px);
+}
+
+.theme-dark .tag-suggested-chip:hover {
+    background-color: hsla(var(--tag-hue), 85%, 75%, 0.12);
+    border-color: hsl(var(--tag-hue), 85%, 75%);
+    box-shadow: 0 3px 10px hsla(var(--tag-hue), 85%, 75%, 0.15);
+}
+
+.theme-light .tag-suggested-chip:hover {
+    background-color: hsla(var(--tag-hue), 85%, 35%, 0.1);
+    border-color: hsl(var(--tag-hue), 85%, 35%);
+    box-shadow: 0 3px 10px hsla(var(--tag-hue), 85%, 35%, 0.1);
+}
+
+.tag-suggested-icon {
+    font-size: 0.95em;
+    opacity: 0.95;
+}
+
+.tag-suggested-percent {
+    font-size: 0.8em;
+    opacity: 0.8;
+    background-color: rgba(0, 0, 0, 0.05);
+    padding: 0px 5px;
+    border-radius: 6px;
+    font-weight: 700;
+}
+
+.theme-dark .tag-suggested-percent {
+    background-color: rgba(255, 255, 255, 0.08);
+}
+
+/* Tag section inside column */
+.tag-intersection-section {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.tag-intersection-section-title-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    flex-shrink: 0;
+}
+
+.tag-intersection-section-title {
+    font-size: 0.75em;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    font-weight: 700;
+    margin: 0;
+}
+
+/* Controls */
+.tag-intersection-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.tag-intersection-toggle-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.78em;
+    color: var(--text-muted);
+    cursor: pointer;
+    user-select: none;
+    font-weight: 600;
+}
+
+.tag-intersection-toggle-input {
+    margin: 0;
+    cursor: pointer;
+    accent-color: var(--interactive-accent);
+}
+
+/* Tag Cloud (Wrapping pills) */
+.tag-list-container {
+    flex-grow: 1;
+    overflow-y: auto;
+    border: 1px solid var(--background-modifier-border);
+    border-radius: 12px;
+    padding: 12px;
+    background-color: var(--background-secondary-alt);
+    max-height: 220px;
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    gap: 8px;
+}
+
+.tag-item {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 12px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.82em;
+    font-weight: 600;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid transparent;
+    background: transparent;
+    text-align: left;
+    gap: 6px;
+}
+
+/* Dynamic theme variables applied by JS */
+.theme-dark .tag-item:not(.tag-disabled) {
+    color: hsl(var(--tag-hue), 80%, 70%);
+    background-color: hsla(var(--tag-hue), 80%, 70%, 0.06);
+    border-color: hsla(var(--tag-hue), 80%, 70%, 0.25);
+}
+
+.theme-light .tag-item:not(.tag-disabled) {
+    color: hsl(var(--tag-hue), 85%, 35%);
+    background-color: hsla(var(--tag-hue), 85%, 35%, 0.05);
+    border-color: hsla(var(--tag-hue), 85%, 35%, 0.15);
+}
+
+.theme-dark .tag-item:hover:not(.tag-disabled) {
+    background-color: hsla(var(--tag-hue), 80%, 70%, 0.15);
+    border-color: hsla(var(--tag-hue), 80%, 70%, 0.45);
+    transform: scale(1.05) translateY(-1px);
+    box-shadow: 0 3px 8px hsla(var(--tag-hue), 80%, 70%, 0.12);
+}
+
+.theme-light .tag-item:hover:not(.tag-disabled) {
+    background-color: hsla(var(--tag-hue), 85%, 35%, 0.12);
+    border-color: hsla(var(--tag-hue), 85%, 35%, 0.4);
+    transform: scale(1.05) translateY(-1px);
+    box-shadow: 0 3px 8px hsla(var(--tag-hue), 85%, 35%, 0.08);
+}
+
+.tag-item-name {
+    max-width: 140px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.tag-item-count {
+    font-size: 0.8em;
+    padding: 1px 6px;
+    border-radius: 10px;
+    font-weight: 700;
+    transition: all 0.2s ease;
+}
+
+.theme-dark .tag-item-count {
+    background-color: hsla(var(--tag-hue), 80%, 70%, 0.15);
+}
+
+.theme-light .tag-item-count {
+    background-color: hsla(var(--tag-hue), 85%, 35%, 0.1);
+}
+
+.tag-disabled {
+    opacity: 0.25;
+    cursor: not-allowed;
+    filter: grayscale(1);
+}
+
+/* Notes section */
+.tag-intersection-notes-section {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    flex-grow: 1;
+}
+
+.notes-sort-select {
+    background-color: var(--background-modifier-form-field);
+    color: var(--text-normal);
+    border: 1px solid var(--background-modifier-border);
+    border-radius: 15px;
+    padding: 3px 10px;
+    font-size: 0.8em;
+    outline: none;
+    cursor: pointer;
+    font-weight: 600;
+    transition: border-color 0.2s ease;
+}
+
+.notes-sort-select:focus {
+    border-color: var(--interactive-accent);
+}
+
+.notes-list-container {
+    flex-grow: 1;
+    overflow-y: auto;
+    border: 1px solid var(--background-modifier-border);
+    border-radius: 12px;
+    padding: 12px;
+    background-color: var(--background-primary);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* Beautiful Note Cards */
+.note-item {
+    display: flex;
+    flex-direction: column;
+    padding: 12px 14px;
+    border-radius: 10px;
+    cursor: pointer;
+    background-color: var(--background-secondary);
+    border: 1px solid var(--background-modifier-border);
+    border-left: 4px solid var(--note-accent-color, var(--interactive-accent));
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    text-align: left;
+}
+
+.note-item:hover {
+    background-color: var(--background-modifier-hover);
+    border-color: var(--background-modifier-border-focus);
+    transform: translateY(-2px) translateX(2px);
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
+}
+
+.note-title {
+    font-size: 0.95em;
+    font-weight: 600;
+    color: var(--text-normal);
+    margin-bottom: 4px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.note-path {
+    font-size: 0.76em;
+    color: var(--text-muted);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    opacity: 0.85;
+}
+
+.note-meta {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 8px;
+    font-size: 0.72em;
+    color: var(--text-faint);
+    font-weight: 500;
+}
+
+.notes-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: var(--text-muted);
+    font-style: italic;
+    font-size: 0.9em;
+    text-align: center;
+    padding: 24px;
+}
+
+/* Animations */
+@keyframes tagPopIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.8) translateY(4px);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+/* Scrollbar tweaks */
+.tag-list-container::-webkit-scrollbar,
+.notes-list-container::-webkit-scrollbar {
+    width: 6px;
+}
+
+.tag-list-container::-webkit-scrollbar-thumb,
+.notes-list-container::-webkit-scrollbar-thumb {
+    background-color: var(--background-modifier-border);
+    border-radius: 10px;
+}
+
+.tag-list-container::-webkit-scrollbar-thumb:hover,
+.notes-list-container::-webkit-scrollbar-thumb:hover {
+    background-color: var(--text-faint);
+}

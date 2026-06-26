@@ -1,0 +1,26 @@
+{
+  "name": "obsidian-tag-intersection",
+  "version": "1.0.0",
+  "description": "Explore and query notes by selecting intersections of multiple tags in a beautiful custom sidebar view.",
+  "main": "main.js",
+  "scripts": {
+    "dev": "node esbuild.config.mjs",
+    "build": "node esbuild.config.mjs production"
+  },
+  "keywords": [
+    "obsidian",
+    "plugin",
+    "tags",
+    "query",
+    "intersection"
+  ],
+  "author": "Antigravity",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^18.11.9",
+    "esbuild": "^0.17.11",
+    "obsidian": "^1.1.1",
+    "tslib": "^2.4.0",
+    "typescript": "^4.9.3"
+  }
+}
